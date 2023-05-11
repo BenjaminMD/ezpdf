@@ -3,12 +3,18 @@ import numpy.typing as npt
 import pandas as pd
 import numpy as np
 
-from typing import TypeAlias, Union, Dict, List
+from typing import Union, Dict, List
 from collections import defaultdict
 from glob import glob
 import pathlib
+import sys
 
-StrArray: TypeAlias = npt.NDArray[np.str_]
+
+if sys.version_info < (3, 11):
+    StrArray = np.ndarray
+else:
+    from typing import TypeAlias
+    StrArray: TypeAlias = npt.NDArray[np.str_]
 
 
 class ParseRes:

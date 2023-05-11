@@ -3,8 +3,7 @@ import numpy as np
 import re 
 
 
-def plot_single_PDF(recipe):
-    res = recipe._contributions['PDF'].residuals
+def plot_single_PDF(recipe, res):
     r, gobs, gcalc, gdiff, baseline, gr_composition = get_gr(recipe)
 
     xlabel = r'$r\,/\,\mathrm{\AA}$'
@@ -25,15 +24,17 @@ def plot_single_PDF(recipe):
 
 
 
-def plot_PDF(recipe):
-    fig, ax = single_figure('$r\,/\,\mathrm{\AA}$', '$G$($r$)$\,/\,\mathrm{\AA}^{-2}$')
-    r, gobs, gcalc, gdiff, baseline, gr_composition = get_gr(fit_pdf.recipe)
+def plot_PDF(fit, recipe, res):
+    fig, ax = create_basic_plot('$r\,/\,\mathrm{\AA}$', '$G$($r$)$\,/\,\mathrm{\AA}^{-2}$')
+    r, gobs, gcalc, gdiff, baseline, gr_composition = get_gr(recipe)
 
-    [ax.scatter(r, gobs, **kwargs) for kwargs in [dict(s=36, edgecolors='0.0', lw=1.5, label='obs'), dict(s=36, edgecolors='1.0', lw=0), dict(s=35, edgecolors='#f6a800', lw=0, alpha=0.1725, label='obs')]]
-    ax.scatter(r, gobs, 36, "0.0", lw=1.5)
-    ax.scatter(r, gobs, 36, "1.0", lw=0)
-    ax.scatter(r, gobs, 35, "#f6a800", lw=0, alpha=0.1725)
-    ax.scatter([], [], 80, "#f6a800", lw=0, label='obs')
+#    [ax.scatter(r, gobs, **kwargs) for kwargs in [dict(s=36, edgecolors='0.0', lw=1.5), dict(s=36, edgecolors='1.0', lw=0), dict(s=35, edgecolors='#f6a800', lw=0, alpha=0.1725)]]
+#    ax.scatter(r, gobs, 36, "0.0", lw=1.5)
+#    ax.scatter(r, gobs, 36, "1.0", lw=0)
+#    ax.scatter(r, gobs, 35, "#f6a800", lw=0, alpha=0.1725)
+#    ax.scatter([], [], 80, "#f6a800", lw=0, label='obs')
+    
+    ax = scatter_w_outline(ax, r, gobs, label='obs')
 
     ax.plot(r, gcalc, '-', label='calc', linewidth=1.0)
     ax.plot(r, gdiff + baseline, '-', label='diff', color='green')
@@ -44,7 +45,7 @@ def plot_PDF(recipe):
     ax.legend(title=f'Rw = {res.rw:.2f}', ncol=3, loc='upper right')
     gr_p = {}
     ord = {}
-    for i, (name, gcalc_p) in enumerate(zip(fit_pdf.formulas.values(), gr_composition.values())):
+    for i, (name, gcalc_p) in enumerate(zip(fit.formulas.values(), gr_composition.values())):
         span = gcalc_p.min() - gcalc_p.max()
         ord[name] = span
         gr_p[name] = gcalc_p 
@@ -57,7 +58,6 @@ def plot_PDF(recipe):
     ax.text(r.max()*0.5, baseline * 1.8, "Contributing Phases", va='top', ha='center', bbox=dict(facecolor='white', edgecolor='black', boxstyle='round,pad=0.2', alpha=0.5))
     ax.set_yticklabels(['']*10)
     
-    plt.savefig('Test.svg')
 
 
 def get_gr(recipe):
