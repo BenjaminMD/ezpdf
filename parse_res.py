@@ -5,6 +5,7 @@ import numpy as np
 
 from typing import Union, Dict, List
 from collections import defaultdict
+from pathlib import Path
 from glob import glob
 import pathlib
 import sys
@@ -60,13 +61,12 @@ class ParseRes:
 
     
 class ParseResDir(ParseRes):
-    def __init__(self, dir_path: str, par_path: str, filter: str='') -> None:
+    def __init__(self, dir_path:  Union[str, Path], par_path:  Union[str, Path], filter: str = '') -> None:
         self.parse_dir(dir_path, par_path, filter)
 
-
-    def parse_dir(self, dir_path: str, par_path, filter: str) -> None:
+    def parse_dir(self, dir_path: Union[str, Path], par_path, filter: str) -> None:
         files: List[str] = glob(dir_path)
-        parameter_path: str = par_path
+        parameter_path: Union[str, Path] = par_path
         parameter: StrArray = self.read_parameter(parameter_path)
         if filter != '':
             parameter = np.array([p for p in parameter if not p.startswith(filter)])
