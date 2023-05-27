@@ -4,7 +4,7 @@ import re
 
 
 def plot_single_PDF(recipe, res):
-    r, gobs, gcalc, gdiff, baseline, gr_composition = get_gr(recipe)
+    r, gobs, gcalc, gdiff, baseline, _ = get_gr(recipe)
 
     xlabel = r'$r\,/\,\mathrm{\AA}$'
     ylabel = r'$G$($r$)$\,/\,\mathrm{\AA}^{-2}$'
@@ -53,10 +53,11 @@ def plot_PDF(fit, recipe, res):
     for i, name in enumerate(sorted(ord, key=ord.get)):
         ax.plot(r, gr_p[name] + baseline * (i + 3))
         ax.text(r.max()*0.9, gr_p[name][r  > r.max()* 0.8].max() + baseline * (i + 3), f'{name}', va='bottom', ha='center')
-    ax.set_ylim(gr_p[name].min()*1.5 + baseline * (i + 3) + baseline * 0.2, gcalc.max() * 1.5)
+    ax.set_ylim(gr_p[name].min()*1.5 + baseline * (i + 3) + baseline * 0.2, gcalc.max() * 3.0)
     ax.axhspan(baseline * 1.5, -1000, color='black', zorder=-5, alpha=0.15)
     ax.text(r.max()*0.5, baseline * 1.8, "Contributing Phases", va='top', ha='center', bbox=dict(facecolor='white', edgecolor='black', boxstyle='round,pad=0.2', alpha=0.5))
     ax.set_yticklabels(['']*10)
+    return fig, ax
     
 
 
