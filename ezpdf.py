@@ -39,7 +39,7 @@ def plot_PDF(fit, recipe, res):
     ax.plot(r, np.zeros(len(r)), '--',  color='black', linewidth=1.0, zorder=1)
     ax.set_xlim(r.min(), r.max())
         
-    ax.legend(title=f'Rw = {res.rw:.2f}', ncol=3, loc='upper right')
+    ax.legend(title=f'Rw = {res.rw:.2f}', ncol=3, loc='upper right', fontsize=8, title_fontsize=10)
     gr_p = {}
     ord = {}
     for i, (name, gcalc_p) in enumerate(zip(fit.formulas.values(), gr_composition.values())):
@@ -50,7 +50,7 @@ def plot_PDF(fit, recipe, res):
     for i, name in enumerate(sorted(ord, key=ord.get)):
         ax.plot(r, gr_p[name] + baseline * (i + 3))
         ax.text(r.max()*0.9, gr_p[name][r  > r.max()* 0.8].max() + baseline * (i + 3), f'{name}', va='bottom', ha='center')
-    ax.set_ylim(gr_p[name].min()*1.5 + baseline * (i + 3) + baseline * 0.2, gcalc.max() * 1.5)
+    ax.set_ylim(gr_p[name].min()*1.5 + baseline * (i + 3) + baseline * 0.2, gcalc.max() * 2.25)
     ax.axhspan(baseline * 1.5, -1000, color='black', zorder=-5, alpha=0.15)
     ax.text(r.max()*0.5, baseline * 1.8, "Contributing Phases", va='top', ha='center', bbox=dict(facecolor='white', edgecolor='black', boxstyle='round,pad=0.2', alpha=0.5))
     ax.set_yticklabels(['']*10)
