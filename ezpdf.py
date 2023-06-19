@@ -59,16 +59,20 @@ def pdf_base(g: G, res):
 
     fig, ax = create_basic_plot(g.xlabel, g.ylabel)
 
-    scatter_w_outline(ax, g.r, g.obs, label='obs', color="#C9B1D0")
+    scatter_w_outline(ax, g.r, g.obs, label='obs')
 
-    ax.plot(g.r, g.calc, label='calc', c="#4B0082")
-    ax.plot(g.r, g.diff, label='diff', c="#BDBDBD")
+    ax.plot(g.r, g.calc, label='calc')
+    ax.plot(g.r, g.diff, label='diff')
 
     ax.axhline(y=g.baseline + g.zero,  linewidth=0.5, color='k', zorder=-1)
     ax.axhline(y=g.zero, linewidth=0.5, color='k', zorder=-1)
 
     ax.set_xlim(g.r.min(), g.r.max())
+
+
     ax.legend(title=f'Rw = {res.rw:.2f}', **g.legend)
+
+
     return fig, ax
 
 
@@ -83,6 +87,7 @@ def plot_PDF(fit, recipe, res):
     for i, (name, gcalc_p) in enumerate(name_gcal_kv):
         span = gcalc_p.min() - gcalc_p.max()
         ord[name] = span
+
         gr_p[name] = gcalc_p
 
     for i, name in enumerate(sorted(ord, key=ord.get)):  # type: ignore
@@ -92,20 +97,15 @@ def plot_PDF(fit, recipe, res):
         y_pos = gr_p[name][g.r > g.r.max() * 0.8].max() + g.baseline * (i + 3)
         ax.text(x_pos, y_pos, f'{name}', va='bottom', ha='center')
 
-    i = len(gr_p)
+    i = len(gr_p)-1
     name = list(gr_p.keys())[-1]
-    y_min = gr_p[name].min()*1.5 + g.baseline * (i + 3) + g.baseline * 0.2
-    y_max = g.calc[g.r > 1/3 * g.r.max()].max() * 2.0
+    y_min = (gr_p[name].min() + g.baseline * (i + 3))*1.1
+    y_max = g.obs.max() * 1.15
     ax.set_ylim(y_min, y_max)
-    ax.set_ylim(-1.5, 1.1)
 
     x_pos = g.r.max()*0.5
     y_pos = g.baseline * 1.8
-    bbox = dict(facecolor='white',
-                edgecolor='black',
-                boxstyle='round,pad=0.2',
-                alpha=0.5)
-    ax.text(x_pos, y_pos, g.contrib, va='top', ha='center', bbox=bbox)
+
 
     ax.set_yticklabels(['']*10)
     ax.axhspan(g.baseline * 1.5, -1000, color='k', zorder=-5, alpha=0.15)
