@@ -31,13 +31,14 @@ class G:
 
     def __post_init__(self):
         r, obs, calc, diff, baseline, composition = get_gr(self.recipe)
+        [print(k, v.max()) for k, v in composition.items()]
         norm = lambda y: normalize(-1, 1, obs, y)
         self.r = r
         self.obs = norm(obs)
         self.calc = norm(calc)
         self.diff = norm(diff) + norm(baseline)
         self.baseline = norm(baseline)
-        self.composition = composition
+        self.composition = {k: norm(v) for k, v in composition.items()}
         self.zero = norm(0)
 
 
@@ -47,10 +48,10 @@ def normalize(lower_bound, upper_bound, y_ref, y):
     """
     y_min = y_ref.min()
     y_max = y_ref.max()
-    print(y_min, y_max, "y_min, y_max")
+    #print(y_min, y_max, "y_min, y_max")
     y_norm = (upper_bound - lower_bound) * (y - y_min)
     y_norm = y_norm / (y_max - y_min) + lower_bound
-    print(y_norm.min(), y_norm.max(), "y_norm.min(), y_norm.max()")
+    #print(y_norm.min(), y_norm.max(), "y_norm.min(), y_norm.max()")
     return y_norm
 
 
