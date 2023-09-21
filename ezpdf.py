@@ -84,7 +84,10 @@ def plot_PDF(fit, recipe, res):
         return fig, ax
     gr_p = {}
     ord: Dict[str, float] = {}
-    name_gcal_kv = zip(fit.formulas.values(), g.composition.values())
+    formulas = fit.formulas.values()
+    formulas = [n if n != None else f for n, f in zip(fit.names.values(), formulas)]
+    name_gcal_kv = zip(formulas, g.composition.values())
+    
     for i, (name, gcalc_p) in enumerate(name_gcal_kv):
         span = gcalc_p.min() - gcalc_p.max()
         ord[name] = span
