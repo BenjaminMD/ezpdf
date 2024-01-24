@@ -85,7 +85,7 @@ def plot_PDF(fit, recipe, res):
     gr_p = {}
     ord: Dict[str, float] = {}
     formulas = fit.formulas.values()
-    formulas = [n if n != None else f for n, f in zip(fit.names.values(), formulas)]
+    formulas = [n if n != None else f for n, f in zip(fit.name.values(), formulas)]
     name_gcal_kv = zip(formulas, g.composition.values())
     
     for i, (name, gcalc_p) in enumerate(name_gcal_kv):
